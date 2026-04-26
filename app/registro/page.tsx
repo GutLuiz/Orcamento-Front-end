@@ -2,8 +2,8 @@
 import Link from "next/link"
 import { useState } from "react"
 
-// servicos
-import { loginRequest } from "@/services/autenticacao";
+//servicos
+import { RegisterRequest } from "@/services/autenticacao"
 
 // componentes
 import { Button } from "@/components/ui/button"
@@ -19,23 +19,25 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-export default function Login() {
 
-  // constantes testes de login
+export default function Registro() {
+     // constantes testes de login
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
   // Funcao teste de login
-  async function handleLogin(e: React.FormEvent) {
+  async function handleRegister(e: React.FormEvent) {
     e.preventDefault()
   
-    try {
-      const data = await loginRequest(email, password)
+    console.log("ANTES DO FETCH:", email, password)
   
-      console.log("logado")
-      console.log(data) 
+    try {
+      const data = await RegisterRequest(email, password)
+  
+      console.log("Registrado")
+      console.log(data)
     } catch (error) {
-      console.log("erro ao logar")
+      console.log("erro ao registrar", error)
     }
   }
 
@@ -43,18 +45,18 @@ export default function Login() {
     <main className="flex min-h-screen items-center justify-center p-4">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>Faça Login na sua Conta!</CardTitle>
+          <CardTitle>Registre sua Conta!</CardTitle>
           <CardDescription>
-           Entre com Email e senha
+                Adicione seu Email e Senha
           </CardDescription>
           <CardAction>
-            <Link href="/registro">
-              <Button variant="link">Registra-se</Button>
-            </Link>
+                <Link href="/">
+                    <Button variant="link">Login</Button>
+                </Link>
           </CardAction>
         </CardHeader>
         <CardContent>
-          <form id="login-form" onSubmit={handleLogin}>
+          <form id="Register-form" onSubmit={handleRegister}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
@@ -68,12 +70,6 @@ export default function Login() {
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Senha</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Esqueceu a senha?
-                  </a>
                 </div>
                 <Input
                   id="password"
@@ -86,8 +82,8 @@ export default function Login() {
           </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button type="submit" form="login-form"  className="w-full">
-            Login
+          <Button type="submit" form="Register-form" className="w-full">
+            Registrar
           </Button>
         </CardFooter>
       </Card>
