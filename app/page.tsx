@@ -1,6 +1,7 @@
 "use client"
 import Link from "next/link"
 import { useState } from "react"
+import { useRouter } from "next/navigation";
 
 // servicos
 import { loginRequest } from "@/services/autenticacao";
@@ -21,6 +22,8 @@ import { Label } from "@/components/ui/label"
 
 export default function Login() {
 
+  // constantes react
+  const router = useRouter();
   // constantes testes de login
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -31,7 +34,12 @@ export default function Login() {
   
     try {
       const data = await loginRequest(email, password)
-  
+         
+      if (data.token) {
+        console.log("Logado!")
+        localStorage.setItem("token", data.token)
+        router.push("/orcamento/categoria/")
+      }
       console.log("logado")
       console.log(data) 
     } catch (error) {
