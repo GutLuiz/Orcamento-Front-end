@@ -1,4 +1,5 @@
-"use-client";
+"use client";
+import Link from "next/link"
 import {
     Sidebar,
     SidebarContent,
@@ -24,42 +25,36 @@ import {
             </span>
           </div>
         </SidebarHeader>
-  
         <SidebarContent>
           <SidebarGroup>
             <SidebarMenu>
-  
               <SidebarMenuItem>
                 <SidebarMenuButton asChild >
-                  <a href="/">
-                    <LayoutDashboard />
-                    Dashboard
-                  </a>
+                <Link href="/">
+                  <LayoutDashboard />
+                  Dashboard
+                </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-  
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/transacoes">
+                  <Link href="/transacoes">
                     <CreditCard />
                     Transações
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-  
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/orcamento/categoria">
+                  <Link href="/orcamento/categoria">
                     <Tags />
                     Categorias
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-  
             </SidebarMenu>
           </SidebarGroup>
         </SidebarContent>
-  
         <SidebarFooter />
       </Sidebar>
     )
