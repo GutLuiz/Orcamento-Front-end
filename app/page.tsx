@@ -31,7 +31,6 @@ export default function Login() {
   // Funcao teste de login
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
-  
     try {
       const data = await loginRequest(email, password)
          
