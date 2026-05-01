@@ -38,7 +38,7 @@ import {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/transacoes">
+                  <Link href="/orcamento/transacoes">
                     <CreditCard />
                     Transações
                   </Link>

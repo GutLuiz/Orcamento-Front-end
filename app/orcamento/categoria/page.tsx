@@ -11,6 +11,7 @@ import { CategoriaPost, CategoriaGet, CategoriaDelete, CategoriaPut } from "@/se
 // componentes
 import { Titulos } from "@/components/titulos/titulo"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Dialogo } from "@/components/dialogo/dialago";
 
 
@@ -156,23 +157,39 @@ export default function Categoria() {
         </section>
         <section>
         <Dialogo
-        titulo="Nova Categoria"
-        open={open}
-        setOpen={setOpen}
-        value={categoriaPost}
-        onChange={setCategoriaPost}
-        onSubmit={PostCategoria}
-        />
+          titulo="Nova Categoria"
+          open={open}
+          setOpen={setOpen}
+          onSubmit={PostCategoria}
+        >
+          <div>
+            <h2 className="text-sm mb-1">Nome</h2>
+
+            <Input
+              value={categoriaPost}
+              onChange={(e) => setCategoriaPost(e.target.value)}
+              placeholder="Nome da categoria"
+            />
+          </div>
+        </Dialogo>
         </section>
         <section>
         <Dialogo
-        titulo="Editar Categoria"
-        open={openEdit}
-        setOpen={setOpenEdit}
-        value={categoriaEdit}
-        onChange={setCategoriaEdit}
-        onSubmit={handlePut}
-        />
+          titulo="Editar Categoria"
+          open={openEdit}
+          setOpen={setOpenEdit}
+          onSubmit={handlePut}
+        >
+          <div>
+            <h2 className="text-sm mb-1">Nome</h2>
+
+            <Input
+              value={categoriaEdit}
+              onChange={(e) => setCategoriaEdit(e.target.value)}
+              placeholder="Editar categoria"
+            />
+          </div>
+        </Dialogo>
         </section>
        </main>
     )
