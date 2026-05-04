@@ -75,8 +75,6 @@ export default function Categoria() {
         if (!categoriaIdEdit) return
       
         try {
-          const updated = await CategoriaPut(categoriaIdEdit, categoriaEdit)
-      
           setCategorias((prev) =>
             prev.map((cat) =>
               cat.id === categoriaIdEdit ? { ...cat, name: categoriaEdit } : cat

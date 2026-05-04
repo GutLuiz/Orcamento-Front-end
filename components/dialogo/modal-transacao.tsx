@@ -251,11 +251,6 @@ export function ModalTransacao({
               </PopoverContent>
             </Popover>
           </div>
-
-      
-
-    
-
           <Button
             variant="outline"
             onClick={() => setOpen(false)}
