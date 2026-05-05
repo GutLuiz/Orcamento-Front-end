@@ -7,7 +7,10 @@ import { Plus, MoreHorizontalIcon,Pencil,Trash2 } from "lucide-react"
 
 //servico
 import { TransacaoDelete, TransacaoGet } from "@/services/transacoes"
+import { CategoriaGet } from "@/services/categorias"
+
 // Types
+import { TransacoesType } from "@/types/transacoesType"
 
 // componentes 
 import { Titulos } from "@/components/titulos/titulo"
@@ -35,10 +38,9 @@ export default function Transacoes(){
 
     const [openEdit, setOpenEdit] = useState(false)
 
-    const [transacaoSelecionada, setTransacaoSelecionada] =
-    useState<any | null>(null)
+    const [transacaoSelecionada, setTransacaoSelecionada] = useState<TransacoesType | null>(null)
 
-    const [transacao, setTransacao] = useState<any[]>([]);
+    const [transacao, setTransacao] = useState<TransacoesType[]>([]);
 
     // Get
     async function GetTransacao() {
@@ -49,6 +51,7 @@ export default function Transacoes(){
             console.log("Erro ao buscar transacoes")
         }
     }
+    
     // delete
     async function handleDelete(id: number) {
         try {
@@ -84,6 +87,7 @@ export default function Transacoes(){
             open={open}
             setOpen={setOpen}
             modo="create"
+            onSuccess={GetTransacao}
             />
             </section>
             <section className="w-full max-w-6xl mx-auto px-4 py-6">
@@ -115,6 +119,7 @@ export default function Transacoes(){
 
                 <TableBody>
                     {transacao.map((transacao) => (
+                        
 
                     <TableRow key={transacao.id}>
 
@@ -223,6 +228,7 @@ export default function Transacoes(){
             setOpen={setOpenEdit}
             modo="edit"
             transacao={transacaoSelecionada}
+            onSuccess={GetTransacao}
             />
             </section>
         </main>

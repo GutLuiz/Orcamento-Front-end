@@ -55,6 +55,7 @@ interface ModalTransacaoProps {
   modo: "create" | "edit"
 
   transacao?: Transacao | null
+  onSuccess?: () => void
 }
 
 export function ModalTransacao({
@@ -62,6 +63,7 @@ export function ModalTransacao({
   setOpen,
   modo,
   transacao,
+  onSuccess
 }: ModalTransacaoProps) {
 
   const [categorias, setCategorias] = useState<any[]>([])
@@ -165,6 +167,7 @@ export function ModalTransacao({
         )
 
         console.log("Transação criada")
+        
 
       }
 
@@ -185,7 +188,7 @@ export function ModalTransacao({
       }
 
       setOpen(false)
-
+      onSuccess?.()   // <-- adiciona aqui nos dois blocos (create e edit)
     } catch (error) {
 
       console.log("Erro ao salvar transação")

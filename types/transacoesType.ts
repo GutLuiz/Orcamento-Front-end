@@ -1,8 +1,10 @@
 export type TransacoesType = {
-    Title : string,
-    Amount : number,
-    Type : number,
-    Date : string,
-    CategoryId : number,
-    UserId : number
+    id: number
+    title: string
+    amount: number
+    type: number
+    date: string
+    categoryId: number
+    userId: number
+    categoryName : string
 }
