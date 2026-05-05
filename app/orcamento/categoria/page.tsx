@@ -12,7 +12,7 @@ import { CategoriaPost, CategoriaGet, CategoriaDelete, CategoriaPut } from "@/se
 import { Titulos } from "@/components/titulos/titulo"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Dialogo } from "@/components/dialogo/dialago";
+import { Dialogo } from "@/components/dialogo/modal-categoria";
 
 
 export default function Categoria() {

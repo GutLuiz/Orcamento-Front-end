@@ -32,7 +32,12 @@ import {
 
 export default function Transacoes(){
     const [open, setOpen] = useState(false);
-    
+
+    const [openEdit, setOpenEdit] = useState(false)
+
+    const [transacaoSelecionada, setTransacaoSelecionada] =
+    useState<any | null>(null)
+
     const [transacao, setTransacao] = useState<any[]>([]);
 
     // Get
@@ -65,7 +70,7 @@ export default function Transacoes(){
             <section>
             <Titulos 
                 tituloPrincial="Transações" 
-                subtitulo="5 transacoes feitas"
+                subtitulo={ transacao.length + " transacoes cadastradas"}
                 button="Nova Transacao"
                 icon = {<Plus/>}
                 onClick={() => setOpen(true)}
@@ -76,8 +81,9 @@ export default function Transacoes(){
             </section>
             <section>
             <ModalTransacao
-                open={open}
-                setOpen={setOpen}
+            open={open}
+            setOpen={setOpen}
+            modo="create"
             />
             </section>
             <section className="w-full max-w-6xl mx-auto px-4 py-6">
@@ -176,7 +182,10 @@ export default function Transacoes(){
                                 <DropdownMenuContent align="end">
 
                                 <DropdownMenuItem
-                                    onClick={() => handleEdit(transacao)}
+                                    onClick={() => {
+                                        setTransacaoSelecionada(transacao)
+                                        setOpenEdit(true)
+                                      }}
                                 >
                                     <Pencil className="mr-2 h-4 w-4" />
                                     Editar
@@ -207,6 +216,14 @@ export default function Transacoes(){
                     </Table>
 
                 </div>
+            </section>
+            <section>
+            <ModalTransacao
+            open={openEdit}
+            setOpen={setOpenEdit}
+            modo="edit"
+            transacao={transacaoSelecionada}
+            />
             </section>
         </main>
        
