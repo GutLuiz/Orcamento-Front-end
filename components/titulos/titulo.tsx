@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 interface TituloProps{
     tituloPrincial : string;
     subtitulo : string;
-    button : string;
+    button :React.ReactNode;
     icon : React.ReactNode;
     onClick?: () => void
 }

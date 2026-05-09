@@ -30,7 +30,7 @@ import {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild >
-                <Link href="/">
+                <Link href="/orcamento/">
                   <LayoutDashboard />
                   Dashboard
                 </Link>

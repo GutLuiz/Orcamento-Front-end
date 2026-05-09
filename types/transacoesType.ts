@@ -8,3 +8,9 @@ export type TransacoesType = {
     userId: number
     categoryName : string
 }
+
+export type GastosPorCategoria = {
+    categoria : string,
+    valor : number
+}
+
