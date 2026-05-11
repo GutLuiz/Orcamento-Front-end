@@ -12,13 +12,13 @@ const Grafico: React.FC<GraficoContainerProps> = ({
   titulografico,
   children
 }) => (
-    <Card className="transform transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg">
-    <CardHeader>
+    <Card className="h-full border-border/80 shadow-sm transition-shadow duration-200 hover:shadow-md">
+    <CardHeader className="pb-2">
       <div className="flex items-center justify-between">
-        <CardTitle>{titulografico}</CardTitle>
+        <CardTitle className="text-base font-semibold">{titulografico}</CardTitle>
       </div>
     </CardHeader>
-    <CardContent>{children}</CardContent>
+    <CardContent className="pt-0">{children}</CardContent>
   </Card>
 );
 export default Grafico;

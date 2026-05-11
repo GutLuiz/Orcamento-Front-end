@@ -1,50 +1,32 @@
 "use client";
 
-//GRAFICOS
-import {
-  Cell,
-  Pie,
-  PieChart
-} from "recharts";
+import { Cell, Pie, PieChart } from "recharts";
 
 import { chartPalette } from "@/lib/theme-colors";
 
-// COMPONENTES:
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   ChartLegend,
-  ChartLegendContent
-} from "@/components/ui/chart"; 
-import Cards from "@/components/card/card"
-import { Titulos } from "@/components/titulos/titulo"
+  ChartLegendContent,
+} from "@/components/ui/chart";
+import Cards from "@/components/card/card";
+import { Titulos } from "@/components/titulos/titulo";
 import Grafico from "@/components/grafico/grafico";
 import Tabelas from "@/components/tabelas/tabelas";
 import { TableCell } from "@/components/ui/table";
 
-// hooks
-import { UseDashboard } from "@/hooks/use-dashboard"
+import { UseDashboard } from "@/hooks/use-dashboard";
 
-export default function Home(){
-   // cores
-   const cores = [
-    "var(--chart-2)",
-    "var(--chart-3)",
-    "var(--chart-3)",
-    "var(--chart-4)",
-    "var(--chart-5)",
-  ];
-    const {
-      receitas,
-      despesas,
-      saldo,
-      gastosCategoria,
-      listaTransacoes
-    } = UseDashboard();
+const fmtBRL = (n: number) =>
+  n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
-  // configs dos graficos
+export default function Home() {
+  const { receitas, despesas, saldo, gastosCategoria, listaTransacoes } =
+    UseDashboard();
+
   const dados = gastosCategoria;
   const GraficoConfig = Object.fromEntries(
     dados.map((item, i) => [
@@ -55,98 +37,97 @@ export default function Home(){
       },
     ])
   ) satisfies ChartConfig;
-    return(
-       <main>
-         <section>
-            <Titulos 
-            tituloPrincial="Dashboard"
-            subtitulo="Visao Geral"
-            button={false}
-            icon={false}
-            />
-        </section>
-       
-        <section className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:gap-12">
-            <Cards
-              titulo="Receita"
-              tituloDesc="Receita total"
-              dados={receitas}
-            />
-            <Cards
-              titulo="Despesa"
-              tituloDesc="Despesa total"
-              dados={despesas}
-            />
-            <Cards
-              titulo="Saldo"
-              tituloDesc="Saldo Atual"
-              dados={saldo}
-            />
-          </section>
-          <section className="grid gap-5 lg:grid-cols-2">
-            <div className="w-full">
-              <Grafico
-                titulografico="Percentual de faturamento Por Filiais"
-              >
-                <ChartContainer
-                  config={GraficoConfig}
-                  className="[&_.recharts-pie-label-text]:fill-foreground mx-auto aspect-square max-h-[250px] pb-0"
+
+  return (
+    <div className="mx-auto w-full max-w-7xl space-y-8">
+      <Titulos
+        tituloPrincial="Dashboard"
+        subtitulo="Visão geral das suas finanças"
+      />
+
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+        <Cards
+          titulo="Receita"
+          tituloDesc="Receita total"
+          dados={fmtBRL(Number(receitas) || 0)}
+        />
+        <Cards
+          titulo="Despesa"
+          tituloDesc="Despesa total"
+          dados={fmtBRL(Number(despesas) || 0)}
+        />
+        <Cards
+          titulo="Saldo"
+          tituloDesc="Saldo atual"
+          dados={fmtBRL(Number(saldo) || 0)}
+        />
+      </section>
+
+      <section className="grid gap-6 lg:grid-cols-2 lg:items-start">
+        <div className="min-w-0">
+          <Grafico titulografico="Gastos por categoria">
+            <ChartContainer
+              config={GraficoConfig}
+              className="mx-auto aspect-square max-h-[280px] pb-0 [&_.recharts-pie-label-text]:fill-foreground"
+            >
+              <PieChart height={280} margin={{ top: 12, bottom: 12 }}>
+                <ChartTooltip
+                  cursor={false}
+                  content={
+                    <ChartTooltipContent nameKey="categoria" hideLabel />
+                  }
+                />
+                <Pie
+                  data={gastosCategoria}
+                  dataKey="valor"
+                  nameKey="categoria"
+                  label
                 >
-                    <PieChart height={250} margin={{ top: 15, bottom: 15 }}>
-                      <ChartTooltip
-                        cursor={false}
-                        content={
-                          <ChartTooltipContent nameKey="categoria" hideLabel />
-                        }
-                      />
-                      <Pie
-                        data={gastosCategoria}
-                        dataKey="valor"
-                        nameKey="categoria"
-                        label
-                      >
-                         {gastosCategoria.map((entry, index) => (
-                          <Cell
-                            key={entry.categoria}
-                            fill={cores[index % cores.length]}
-                          />
-                        ))}
-                      </Pie>
-                      <ChartLegend
-                        content={<ChartLegendContent nameKey="categoria" />}
-                      />
-                    </PieChart>
-                </ChartContainer>
-              </Grafico>
-            </div>
-            <div className="w-full">
-            <Tabelas
-                titulo="Transações recentes"
-                colunas={["Título", "Valor", "Tipo", "Categoria", "Data"]}
-                dados={listaTransacoes}
-                renderLinha={(item) => (
-                  <>
-                    <TableCell className="font-medium">{item.title || "—"}</TableCell>
-                    <TableCell>
-                      {(item.amount ?? 0).toLocaleString("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                      })}
-                    </TableCell>
-                    <TableCell>{item.type ?? "—"}</TableCell>
-                    <TableCell>{item.categoryName || "—"}</TableCell>
-                    <TableCell className="text-right text-muted-foreground">
-                      {item.date
-                        ? new Date(item.date).toLocaleDateString("pt-BR")
-                        : "—"}
-                    </TableCell>
-                  </>
-                )}
-              />
-            </div>
-          </section>
-  
-       </main>
-        
-    )
+                  {gastosCategoria.map((entry, index) => (
+                    <Cell
+                      key={entry.categoria}
+                      fill={
+                        chartPalette[index % chartPalette.length]
+                      }
+                    />
+                  ))}
+                </Pie>
+                <ChartLegend
+                  content={<ChartLegendContent nameKey="categoria" />}
+                />
+              </PieChart>
+            </ChartContainer>
+          </Grafico>
+        </div>
+
+        <div className="min-w-0 lg:col-span-1">
+          <Tabelas
+            titulo="Transações recentes"
+            colunas={["Título", "Valor", "Tipo", "Categoria", "Data"]}
+            dados={listaTransacoes}
+            renderLinha={(item) => (
+              <>
+                <TableCell className="font-medium">
+                  {item.title || "—"}
+                </TableCell>
+                <TableCell>
+                  {(item.amount ?? 0).toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </TableCell>
+                <TableCell>{item.type ?? "—"}</TableCell>
+                <TableCell>{item.categoryName || "—"}</TableCell>
+                <TableCell className="text-right text-muted-foreground">
+                  {item.date
+                    ? new Date(item.date).toLocaleDateString("pt-BR")
+                    : "—"}
+                </TableCell>
+              </>
+            )}
+          />
+        </div>
+      </section>
+    </div>
+  );
 }

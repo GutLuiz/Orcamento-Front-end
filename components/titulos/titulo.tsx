@@ -1,30 +1,41 @@
-import { Button } from "../ui/button";
+import { Button } from "../ui/button"
 
-interface TituloProps{
-    tituloPrincial : string;
-    subtitulo : string;
-    button :React.ReactNode;
-    icon : React.ReactNode;
-    onClick?: () => void
+interface TituloProps {
+  tituloPrincial: string
+  subtitulo: string
+  button?: React.ReactNode
+  icon?: React.ReactNode
+  onClick?: () => void
 }
 
-export function Titulos({ tituloPrincial, subtitulo, button, icon, onClick}: TituloProps) {
-    return (
-        <section className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
-        
-        <div>
-          <h2 className="text-sm text-muted-foreground justify-center flex">
-            {subtitulo}
-          </h2>
-          <h1 className="font-display text-3xl font-semibold sm:text-4xl">
-            {tituloPrincial}
-          </h1>
-        </div>
-  
-        <Button  onClick={onClick}  size="lg" className="bg-green-800 flex items-center gap-2 px-10 py-5 rounded-xl">
+export function Titulos({
+  tituloPrincial,
+  subtitulo,
+  button,
+  icon,
+  onClick,
+}: TituloProps) {
+  const showAction = Boolean(button) || Boolean(icon)
+
+  return (
+    <div className="flex w-full flex-col gap-1 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
+      <div className="space-y-1">
+        <p className="text-sm font-medium text-muted-foreground">{subtitulo}</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+          {tituloPrincial}
+        </h1>
+      </div>
+
+      {showAction ? (
+        <Button
+          onClick={onClick}
+          size="lg"
+          className="mt-3 shrink-0 gap-2 rounded-xl bg-primary px-8 text-primary-foreground sm:mt-0"
+        >
           {icon}
           {button}
         </Button>
-      </section>
-    )
-  }
+      ) : null}
+    </div>
+  )
+}

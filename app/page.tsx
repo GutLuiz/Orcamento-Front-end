@@ -47,8 +47,8 @@ export default function Login() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-sm">
+    <main className="flex min-h-screen items-center justify-center bg-muted/30 p-6 sm:p-8 md:p-10">
+      <Card className="w-full max-w-md border-border/80 shadow-md">
         <CardHeader>
           <CardTitle>Faça Login na sua Conta!</CardTitle>
           <CardDescription>
