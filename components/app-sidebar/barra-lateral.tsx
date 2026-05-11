@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import {
     Sidebar,
     SidebarContent,
@@ -11,47 +12,64 @@ import {
     SidebarMenuButton,
   } from "@/components/ui/sidebar"
   
-  import { LayoutDashboard, CreditCard, Tags, Wallet } from "lucide-react"
+  import { LayoutDashboard, CreditCard, Tags } from "lucide-react"
 
   
   export function AppSidebar() {
+    const pathname = usePathname()
+
+    const itens = [
+      {
+        href: "/orcamento/",
+        label: "Dashboard",
+        icon: LayoutDashboard,
+      },
+      {
+        href: "/orcamento/transacoes",
+        label: "Transações",
+        icon: CreditCard,
+      },
+      {
+        href: "/orcamento/categoria",
+        label: "Categorias",
+        icon: Tags,
+      },
+    ]
+
+    const isItemAtivo = (href: string) => {
+      if (href === "/orcamento/") return pathname === "/orcamento"
+      return pathname.startsWith(href)
+    }
+
     return (
-      <Sidebar className="[--sidebar:oklch(0.62_0.14_155)] [--sidebar-foreground:oklch(0.98_0_0)] [--sidebar-accent:oklch(0.56_0.13_155)] [--sidebar-accent-foreground:oklch(0.98_0_0)] [--sidebar-border:oklch(0.46_0.10_155)] border-r border-sidebar-border">
+      <Sidebar className="[--sidebar:oklch(1_0_0)] [--sidebar-foreground:oklch(0.24_0.01_165)] [--sidebar-accent:oklch(0.95_0.03_155)] [--sidebar-accent-foreground:oklch(0.24_0.01_165)] [--sidebar-border:oklch(0.9_0.01_165)] border-r border-sidebar-border">
         <SidebarHeader>
-          <div className="flex items-center gap-3 rounded-lg bg-emerald-800/25 px-3 py-2">
-            <Wallet size={18} />
-            <span className="text-sm font-semibold tracking-wide text-white">
-                App Site
+          <div className="flex items-center justify-center border-b border-sidebar-border px-3 py-3">
+            <span className="text-sm font-semibold tracking-wide text-sidebar-foreground">
+                Minha Empresa
             </span>
           </div>
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent/80 data-[active=true]:text-sidebar-accent-foreground">
-                <Link href="/orcamento/">
-                  <LayoutDashboard />
-                  Dashboard
-                </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent/80 data-[active=true]:text-sidebar-accent-foreground">
-                  <Link href="/orcamento/transacoes">
-                    <CreditCard />
-                    Transações
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent/80 data-[active=true]:text-sidebar-accent-foreground">
-                  <Link href="/orcamento/categoria">
-                    <Tags />
-                    Categorias
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {itens.map((item) => {
+                const Icon = item.icon
+                return (
+                  <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isItemAtivo(item.href)}
+                      className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground"
+                    >
+                      <Link href={item.href}>
+                        <Icon />
+                        {item.label}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
             </SidebarMenu>
           </SidebarGroup>
         </SidebarContent>

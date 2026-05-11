@@ -30,7 +30,8 @@ export function Titulos({
         <Button
           onClick={onClick}
           size="lg"
-          className="mt-3 shrink-0 gap-2 rounded-xl bg-primary px-8 text-primary-foreground sm:mt-0"
+          className="mt-3 shrink-0 gap-2 rounded-xl bg-primary px-8 text-primary-foreground sm:mt-0 bg-green-800"
+          
         >
           {icon}
           {button}

@@ -78,6 +78,7 @@ export function ModalTransacao({
   const [amount, setAmount] = useState("")
   const [date, setDate] = useState<Date>()
   const [type, setType] = useState(0)
+  const [isSaving, setIsSaving] = useState(false)
 
   // carregar categorias
   async function fetchCategorias() {
@@ -153,6 +154,8 @@ export function ModalTransacao({
       return
     }
 
+    setIsSaving(true)
+
     try {
 
       // CREATE
@@ -188,11 +191,18 @@ export function ModalTransacao({
       }
 
       setOpen(false)
-      onSuccess?.()   // <-- adiciona aqui nos dois blocos (create e edit)
+
+      try {
+        await onSuccess?.()
+      } catch (error) {
+        console.log("Erro ao atualizar lista de transações")
+      }
     } catch (error) {
 
-      console.log("Erro ao salvar transação")
+      console.log("Erro ao salvar transação", error)
 
+    } finally {
+      setIsSaving(false)
     }
   }
 

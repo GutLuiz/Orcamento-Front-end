@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button"
 type CategoriaItem = {
   id: number
   name: string
+  totalMovimentado : number
 }
 
 export default function Categoria() {
@@ -29,6 +30,7 @@ export default function Categoria() {
   const [categoriaIdEdit, setCategoriaIdEdit] = useState<number | null>(null)
   const [categoriaPost, setCategoriaPost] = useState("")
   const [categorias, setCategorias] = useState<CategoriaItem[]>([])
+  
 
   async function PostCategoria(e: React.FormEvent) {
     e.preventDefault()
@@ -155,9 +157,9 @@ export default function Categoria() {
                 </CardHeader>
 
                 <CardContent className="flex items-center justify-between border-t pt-3">
-                  <span className="text-xs text-muted-foreground">Status</span>
+                  <span className="text-xs text-muted-foreground">Movimentado</span>
                   <span className="text-sm font-semibold text-foreground">
-                    Disponível
+                  {c.totalMovimentado.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
                   </span>
                 </CardContent>
               </Card>

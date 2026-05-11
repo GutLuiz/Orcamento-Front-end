@@ -103,7 +103,7 @@ export default function Home() {
         <div className="min-w-0 lg:col-span-1">
           <Tabelas
             titulo="Transações recentes"
-            colunas={["Título", "Valor", "Tipo", "Categoria", "Data"]}
+            colunas={["Título", "Valor", "Categoria", "Data"]}
             dados={listaTransacoes}
             renderLinha={(item) => (
               <>
@@ -116,7 +116,6 @@ export default function Home() {
                     currency: "BRL",
                   })}
                 </TableCell>
-                <TableCell>{item.type ?? "—"}</TableCell>
                 <TableCell>{item.categoryName || "—"}</TableCell>
                 <TableCell className="text-right text-muted-foreground">
                   {item.date
