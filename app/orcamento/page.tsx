@@ -24,12 +24,23 @@ const fmtBRL = (n: number) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export default function Home() {
-  const { receitas, despesas, saldo, gastosCategoria, listaTransacoes } =
+  const { receitas, despesas, saldo, gastosCategoriaReceitas, gastosCategoriaDespesas,listaTransacoes } =
     UseDashboard();
 
-  const dados = gastosCategoria;
-  const GraficoConfig = Object.fromEntries(
-    dados.map((item, i) => [
+  const dadosDespesa = gastosCategoriaDespesas;
+  const GraficoDespesaConfig = Object.fromEntries(
+    dadosDespesa.map((item, i) => [
+      item.categoria,
+      {
+        label: item.categoria,
+        color: chartPalette[i % chartPalette.length],
+      },
+    ])
+  ) satisfies ChartConfig;
+
+  const dadosReceita = gastosCategoriaReceitas;
+  const GraficoReceitaConfig = Object.fromEntries(
+    dadosReceita.map((item, i) => [
       item.categoria,
       {
         label: item.categoria,
@@ -67,7 +78,7 @@ export default function Home() {
         <div className="min-w-0">
           <Grafico titulografico="Gastos por categoria">
             <ChartContainer
-              config={GraficoConfig}
+              config={GraficoDespesaConfig}
               className="mx-auto aspect-square max-h-[280px] pb-0 [&_.recharts-pie-label-text]:fill-foreground"
             >
               <PieChart height={280} margin={{ top: 12, bottom: 12 }}>
@@ -78,12 +89,12 @@ export default function Home() {
                   }
                 />
                 <Pie
-                  data={gastosCategoria}
+                  data={gastosCategoriaDespesas}
                   dataKey="valor"
                   nameKey="categoria"
                   label
                 >
-                  {gastosCategoria.map((entry, index) => (
+                  {gastosCategoriaDespesas.map((entry, index) => (
                     <Cell
                       key={entry.categoria}
                       fill={
@@ -99,8 +110,45 @@ export default function Home() {
             </ChartContainer>
           </Grafico>
         </div>
-
-        <div className="min-w-0 lg:col-span-1">
+        <div className="min-w-0">
+          <Grafico titulografico="Receitas por categoria">
+            <ChartContainer
+              config={GraficoReceitaConfig}
+              className="mx-auto aspect-square max-h-[280px] pb-0 [&_.recharts-pie-label-text]:fill-foreground"
+            >
+              <PieChart height={280} margin={{ top: 12, bottom: 12 }}>
+                <ChartTooltip
+                  cursor={false}
+                  content={
+                    <ChartTooltipContent nameKey="categoria" hideLabel />
+                  }
+                />
+                <Pie
+                  data={gastosCategoriaReceitas}
+                  dataKey="valor"
+                  nameKey="categoria"
+                  label
+                >
+                  {gastosCategoriaReceitas.map((entry, index) => (
+                    <Cell
+                      key={entry.categoria}
+                      fill={
+                        chartPalette[index % chartPalette.length]
+                      }
+                    />
+                  ))}
+                </Pie>
+                <ChartLegend
+                  content={<ChartLegendContent nameKey="categoria" />}
+                />
+              </PieChart>
+            </ChartContainer>
+          </Grafico>
+        </div>
+       
+      </section>
+      <section className="grid gap-6 lg:grid-cols-1 lg:items-start">
+      <div className="min-w-0 lg:col-span-1">
           <Tabelas
             titulo="Transações recentes"
             colunas={["Título", "Valor", "Categoria", "Data"]}
@@ -125,7 +173,7 @@ export default function Home() {
               </>
             )}
           />
-        </div>
+        </div> 
       </section>
     </div>
   );

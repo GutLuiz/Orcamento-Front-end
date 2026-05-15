@@ -59,7 +59,8 @@ export function UseDashboard() {
     const [despesas, setDespesas] = useState(0);
     const [saldo, setSaldo] = useState(0);
     //grafico
-    const [gastosCategoria, setGastosCategoria] = useState<GastosPorCategoria[]>([]);
+    const [gastosCategoriaDespesas, setGastosCategoriaDespesas] = useState<GastosPorCategoria[]>([]);
+    const [gastosCategoriaReceitas, setGastosCategoriaReceitas] = useState<GastosPorCategoria[]>([]);
     //lista
     const [listaTransacoes, setListaTransacoes] = useState<TransacoesType[]>([]);
 
@@ -78,7 +79,8 @@ export function UseDashboard() {
         const dataGrafico = await DashboardGraficoGet();
 
         if(dataGrafico){
-            setGastosCategoria(dataGrafico || [])
+          setGastosCategoriaDespesas(dataGrafico.dadosDespesas || []);
+          setGastosCategoriaReceitas(dataGrafico.dadosReceitas || []);
         }
     }
     async function fetchLista(){
@@ -102,7 +104,8 @@ export function UseDashboard() {
         receitas,
         despesas,
         saldo,
-        gastosCategoria,
+        gastosCategoriaDespesas,
+        gastosCategoriaReceitas,
         listaTransacoes
     }
 
