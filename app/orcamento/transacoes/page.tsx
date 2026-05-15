@@ -13,6 +13,7 @@ import { TransacaoDelete, TransacaoGet } from "@/services/transacoes";
 
 import { TransacoesType } from "@/types/transacoesType";
 
+// componentes
 import { Titulos } from "@/components/titulos/titulo";
 import { ModalTransacao } from "@/components/dialogo/modal-transacao";
 import {
@@ -32,16 +33,28 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { FiltroMes } from "@/components/filtro/filtroMes";
 
 const fmtBRL = (n: number) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export default function Transacoes() {
+
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [transacaoSelecionada, setTransacaoSelecionada] =
     useState<TransacoesType | null>(null);
   const [transacoes, setTransacoes] = useState<TransacoesType[]>([]);
+
+  const hoje = new Date();
+
+  const [mesSelecionado, setMesSelecionado] = useState(
+    hoje.getMonth()
+  );
+
+  const [anoSelecionado, setAnoSelecionado] = useState(
+    hoje.getFullYear()
+  );
 
   async function GetTransacao() {
     try {
@@ -81,6 +94,16 @@ export default function Transacoes() {
         button="Nova transação"
         icon={<Plus className="size-4" />}
         onClick={() => setOpen(true)}
+        filtro={
+          <FiltroMes
+            mesSelecionado={mesSelecionado}
+            anoSelecionado={anoSelecionado}
+            onChange={(mes, ano) => {
+              setMesSelecionado(mes);
+              setAnoSelecionado(ano);
+            }}
+          />
+        }
       />
 
       <section className="min-w-0">

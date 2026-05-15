@@ -6,7 +6,9 @@ interface TituloProps {
   button?: React.ReactNode
   icon?: React.ReactNode
   onClick?: () => void
+  filtro?: React.ReactNode
 }
+
 
 export function Titulos({
   tituloPrincial,
@@ -14,6 +16,7 @@ export function Titulos({
   button,
   icon,
   onClick,
+  filtro
 }: TituloProps) {
   const showAction = Boolean(button) || Boolean(icon)
 
@@ -26,17 +29,20 @@ export function Titulos({
         </h1>
       </div>
 
-      {showAction ? (
-        <Button
-          onClick={onClick}
-          size="lg"
-          className="mt-3 shrink-0 gap-2 rounded-xl bg-primary px-8 text-primary-foreground sm:mt-0 bg-green-800"
-          
-        >
-          {icon}
-          {button}
-        </Button>
-      ) : null}
+      <div className="flex items-center gap-2">
+        {filtro}
+
+        {showAction ? (
+          <Button
+            onClick={onClick}
+            size="lg"
+            className="mt-3 shrink-0 gap-2 rounded-xl bg-primary px-8 text-primary-foreground sm:mt-0 bg-green-800"
+          >
+            {icon}
+            {button}
+          </Button>
+        ) : null}
+      </div>
     </div>
   )
 }

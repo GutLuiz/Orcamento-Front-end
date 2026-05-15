@@ -402,11 +402,19 @@ export function ModalTransacao({
 
               <PopoverContent className="w-auto p-0">
 
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                />
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                disabled={(date) => {
+                  const hoje = new Date()
+
+                  return (
+                    date.getMonth() !== hoje.getMonth() ||
+                    date.getFullYear() !== hoje.getFullYear()
+                  )
+                }}
+              />
 
               </PopoverContent>
 
