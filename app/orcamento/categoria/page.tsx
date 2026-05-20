@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 
 import { Plus, Pencil, Trash2 } from "lucide-react"
 
+// servicos 
 import {
   CategoriaPost,
   CategoriaGet,
@@ -10,17 +11,16 @@ import {
   CategoriaPut,
 } from "@/services/categorias"
 
+// compoenentes
 import { Titulos } from "@/components/titulos/titulo"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Dialogo } from "@/components/dialogo/modal-categoria"
 import { Button } from "@/components/ui/button"
 
-type CategoriaItem = {
-  id: number
-  name: string
-  totalMovimentado : number
-}
+//types
+import { CategoriaItem } from "@/types/categoriaType"
+
 
 export default function Categoria() {
   const [open, setOpen] = useState(false)
@@ -126,9 +126,6 @@ export default function Categoria() {
 
                     <div>
                       <CardTitle className="text-base">{c.name}</CardTitle>
-                      <p className="text-xs text-muted-foreground">
-                        Categoria ativa
-                      </p>
                     </div>
                   </div>
 
@@ -159,7 +156,7 @@ export default function Categoria() {
                 <CardContent className="flex items-center justify-between border-t pt-3">
                   <span className="text-xs text-muted-foreground">Movimentado</span>
                   <span className="text-sm font-semibold text-foreground">
-                  {c.totalMovimentado.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+                     {c.movimentacaoMensal} 
                   </span>
                 </CardContent>
               </Card>
