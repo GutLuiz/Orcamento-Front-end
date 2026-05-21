@@ -93,8 +93,8 @@ export default function Categoria() {
     count === 0
       ? "Nenhuma categoria cadastrada"
       : count === 1
-        ? "1 categoria cadastrada"
-        : `${count} categorias cadastradas`
+        ? "1 categoria cadastrada e seu movimento mensal"
+        : `${count} categorias cadastradas e seus movimentos mensais`
 
   return (
     <div className="mx-auto w-full max-w-7xl space-y-8">
@@ -156,7 +156,7 @@ export default function Categoria() {
                 <CardContent className="flex items-center justify-between border-t pt-3">
                   <span className="text-xs text-muted-foreground">Movimentado</span>
                   <span className="text-sm font-semibold text-foreground">
-                     {c.movimentacaoMensal} 
+                     R${c.movimentacaoMensal} 
                   </span>
                 </CardContent>
               </Card>

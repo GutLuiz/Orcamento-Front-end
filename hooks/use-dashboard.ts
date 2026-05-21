@@ -5,55 +5,8 @@ import { DashboardCardGet, DashboardGraficoGet, DashboardListaGet } from "@/serv
 //type
 import { GastosPorCategoria, TransacoesType } from "@/types/transacoesType";
 
-function pickNum(...vals: unknown[]): number {
-  for (const v of vals) {
-    if (v === undefined || v === null) continue
-    const n = Number(v)
-    if (!Number.isNaN(n)) return n
-  }
-  return 0
-}
 
-function pickStr(...vals: unknown[]): string {
-  for (const v of vals) {
-    if (v === undefined || v === null) continue
-    return String(v)
-  }
-  return ""
-}
-
-/** Retorna string ISO (YYYY-MM-DD ou completa) para alinhar com a API e formulários. */
-function parseDateField(v: unknown): string {
-  if (v instanceof Date && !Number.isNaN(v.getTime())) {
-    return v.toISOString().slice(0, 10)
-  }
-  if (typeof v === "string" || typeof v === "number") {
-    const d = new Date(v)
-    if (!Number.isNaN(d.getTime())) return d.toISOString().slice(0, 10)
-  }
-  return ""
-}
-
-/** API pode enviar camelCase ou PascalCase (.NET). */
-function normalizarTransacao(raw: unknown): TransacoesType {
-  const r =
-    raw && typeof raw === "object"
-      ? (raw as Record<string, unknown>)
-      : {}
-
-  return {
-    id: pickNum(r.id, r.Id),
-    title: pickStr(r.title, r.Title),
-    amount: pickNum(r.amount, r.Amount, r.value, r.Value),
-    type: pickNum(r.type, r.Type),
-    date: parseDateField(r.date ?? r.Date),
-    categoryId: pickNum(r.categoryId, r.CategoryId),
-    userId: pickNum(r.userId, r.UserId),
-    categoryName: pickStr(r.categoryName, r.CategoryName),
-  }
-}
-
-export function UseDashboard() {
+export function UseDashboard(mes: number, ano: number) {
     //cards
     const [receitas, setReceitas] = useState(0);
     const [despesas, setDespesas] = useState(0);
@@ -62,12 +15,13 @@ export function UseDashboard() {
     const [gastosCategoriaDespesas, setGastosCategoriaDespesas] = useState<GastosPorCategoria[]>([]);
     const [gastosCategoriaReceitas, setGastosCategoriaReceitas] = useState<GastosPorCategoria[]>([]);
     //lista
-    const [listaTransacoes, setListaTransacoes] = useState<TransacoesType[]>([]);
+    const [listaTransacoesRecentes, setListaTransacoesRecentes] = useState<TransacoesType[]>([]);
+    const [listaTransacoesMaiores, setListaTransacoesMaiores] = useState<TransacoesType[]>([]);
 
 
     // funcao card
     async function fetchCards() {
-        const dataCard = await DashboardCardGet()
+        const dataCard = await DashboardCardGet(mes, ano)
 
         if (dataCard) {
             setReceitas(dataCard.receita || 0);
@@ -76,7 +30,7 @@ export function UseDashboard() {
         }
     }
     async function fetchGrafico(){
-        const dataGrafico = await DashboardGraficoGet();
+        const dataGrafico = await DashboardGraficoGet(mes, ano);
 
         if(dataGrafico){
           setGastosCategoriaDespesas(dataGrafico.dadosDespesas || []);
@@ -84,20 +38,19 @@ export function UseDashboard() {
         }
     }
     async function fetchLista(){
-        const dataLista = await DashboardListaGet();
+        const dataLista = await DashboardListaGet(mes, ano);
 
-        if (Array.isArray(dataLista)) {
-            setListaTransacoes(dataLista.map(normalizarTransacao))
-        } else {
-            setListaTransacoes([])
-        }
+        if (dataLista) {
+            setListaTransacoesRecentes(dataLista.dadosRecentes)
+            setListaTransacoesMaiores(dataLista.dadosMaiores)
+        } 
     }
 
     useEffect(() => {
         fetchCards();
         fetchGrafico();
         fetchLista();
-    }, []);
+    }, [mes, ano]);
 
 
     return {
@@ -106,7 +59,8 @@ export function UseDashboard() {
         saldo,
         gastosCategoriaDespesas,
         gastosCategoriaReceitas,
-        listaTransacoes
+        listaTransacoesRecentes,
+        listaTransacoesMaiores
     }
 
 }

@@ -1,5 +1,5 @@
 "use client";
-
+import { useState } from "react";
 import { Cell, Pie, PieChart } from "recharts";
 
 import { chartPalette } from "@/lib/theme-colors";
@@ -17,15 +17,26 @@ import { Titulos } from "@/components/titulos/titulo";
 import Grafico from "@/components/grafico/grafico";
 import Tabelas from "@/components/tabelas/tabelas";
 import { TableCell } from "@/components/ui/table";
-
+import { FiltroMes } from "@/components/filtro/filtroMes";
+// hook
 import { UseDashboard } from "@/hooks/use-dashboard";
 
 const fmtBRL = (n: number) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export default function Home() {
-  const { receitas, despesas, saldo, gastosCategoriaReceitas, gastosCategoriaDespesas,listaTransacoes } =
-    UseDashboard();
+  const hoje = new Date();
+
+  const [mesSelecionado, setMesSelecionado] = useState(
+    hoje.getMonth()
+  );
+
+  const [anoSelecionado, setAnoSelecionado] = useState(
+    hoje.getFullYear()
+  );
+
+  const { receitas, despesas, saldo, gastosCategoriaReceitas, gastosCategoriaDespesas, listaTransacoesRecentes, listaTransacoesMaiores } =
+    UseDashboard(mesSelecionado, anoSelecionado);
 
   const dadosDespesa = gastosCategoriaDespesas;
   const GraficoDespesaConfig = Object.fromEntries(
@@ -54,6 +65,16 @@ export default function Home() {
       <Titulos
         tituloPrincial="Dashboard"
         subtitulo="Visão geral das suas finanças"
+        filtro={
+          <FiltroMes
+            mesSelecionado={mesSelecionado}
+            anoSelecionado={anoSelecionado}
+            onChange={(mes, ano) => {
+              setMesSelecionado(mes);
+              setAnoSelecionado(ano);
+            }}
+          />
+        }
       />
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
@@ -152,7 +173,7 @@ export default function Home() {
           <Tabelas
             titulo="Transações recentes"
             colunas={["Título", "Valor", "Categoria", "Data"]}
-            dados={listaTransacoes}
+            dados={listaTransacoesRecentes}
             renderLinha={(item) => (
               <>
                 <TableCell className="font-medium">

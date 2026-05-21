@@ -58,7 +58,7 @@ export default function Transacoes() {
 
   async function GetTransacao() {
     try {
-      const data = await TransacaoGet();
+      const data = await TransacaoGet(mesSelecionado,anoSelecionado);
       setTransacoes(Array.isArray(data) ? data : []);
     } catch {
       console.log("Erro ao buscar transacoes");
@@ -76,7 +76,7 @@ export default function Transacoes() {
 
   useEffect(() => {
     GetTransacao();
-  }, []);
+  }, [mesSelecionado, anoSelecionado]);
 
   const count = transacoes.length;
   const subtitulo =

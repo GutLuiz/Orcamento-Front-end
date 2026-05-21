@@ -22,10 +22,13 @@ export async function TransacaoPost(Title: string, Amount : number, Type : numbe
     return response.json()
   }
    
-  export async function TransacaoGet() {
+  export async function TransacaoGet(mes?: number, ano?: number) {
     const token = localStorage.getItem("token")
-  
-    const response = await fetch("http://localhost:5099/transactions", {
+    const params = new URLSearchParams();
+    if (mes !== undefined) params.append("mes", String(mes + 1));
+    if (ano !== undefined) params.append("ano", String(ano));
+
+    const response = await fetch(`http://localhost:5099/transactions?${params}`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
