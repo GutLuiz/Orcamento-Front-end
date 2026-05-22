@@ -32,20 +32,16 @@ export default function Login() {
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     try {
-      const data = await loginRequest(email, password)
-         
-      if (data.token) {
-        console.log("Logado!")
-        localStorage.setItem("token", data.token)
-        router.push("/orcamento/categoria/")
-      }
-      console.log("logado")
-      console.log(data) 
-    } catch (error) {
-      console.log("erro ao logar")
-    }
-  }
+        const data = await loginRequest(email, password)
 
+        localStorage.setItem("accessToken", data.accessToken)
+        localStorage.setItem("refreshToken", data.refreshToken)
+
+        router.push("/orcamento/")
+    } catch (error) {
+        console.log("erro ao logar")
+    }
+}
   return (
     <main className="flex min-h-screen items-center justify-center bg-muted/30 p-6 sm:p-8 md:p-10">
       <Card className="w-full max-w-md border-border/80 shadow-md">

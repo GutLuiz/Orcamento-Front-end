@@ -120,7 +120,7 @@ import {
               onClick={handleSair}
             >
               <LogOut className="size-4" />
-              Sair
+                Sair
             </Button>
           </div>
         </SidebarFooter>
