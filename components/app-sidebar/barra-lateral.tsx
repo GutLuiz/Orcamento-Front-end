@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
+import { jwtDecode } from "jwt-decode"
+
 import {
     Sidebar,
     SidebarContent,
@@ -15,16 +17,38 @@ import {
   import { LayoutDashboard, ArrowLeftRight, Tags, Wallet, User2, LogOut } from "lucide-react"
   import { Button } from "@/components/ui/button"
 
+  // servico
+  import { logoutRequest } from "@/services/autenticacao";
+
   
   export function AppSidebar() {
     const pathname = usePathname()
     const router = useRouter()
 
-    function handleSair() {
-      localStorage.removeItem("token")
-      router.replace("/")
-    }
+    async function handleSair() {
+      try {
+          await logoutRequest()
+      } finally {
+          // mesmo se a requisição falhar, limpa o storage e redireciona
+          localStorage.removeItem("accessToken")
+          localStorage.removeItem("refreshToken")
+          router.replace("/")
+      }
+  }
 
+interface TokenPayload {
+  email: string
+  nameid: string // o id do usuário
+}
+
+ function getUsuarioLogado() {
+  const token = localStorage.getItem("accessToken")
+  if (!token) return null
+
+  const decoded = jwtDecode<TokenPayload>(token)
+  return decoded
+}
+const usuario = getUsuarioLogado()
     const itens = [
       {
         href: "/orcamento/",
@@ -105,10 +129,10 @@ import {
               </div>
               <div className="min-w-0 flex-1 text-left">
                 <p className="truncate text-sm font-semibold leading-tight text-sidebar-foreground">
-                  Luiz Gustavo
+                   Bem vindo!
                 </p>
                 <p className="truncate text-xs text-sidebar-foreground/55">
-                  luizgustavo@email.com
+                  {usuario?.email}
                 </p>
               </div>
             </div>
@@ -116,7 +140,7 @@ import {
               type="button"
               variant="outline"
               size="sm"
-              className="w-full justify-center gap-2 text-muted-foreground hover:text-destructive"
+              className="w-full cursor-pointer justify-center gap-2 text-muted-foreground hover:text-destructive"
               onClick={handleSair}
             >
               <LogOut className="size-4" />

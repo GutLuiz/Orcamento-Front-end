@@ -25,3 +25,12 @@ export async function RegisterRequest(email: string, password: string) {
     }),
   })
 }
+
+export async function logoutRequest() {
+  const refreshToken = localStorage.getItem("refreshToken")
+
+  await apiFetch("/auth/logout", {
+      method: "POST",
+      body: JSON.stringify({ refreshToken }),
+  })
+}
