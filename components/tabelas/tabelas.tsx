@@ -10,7 +10,7 @@ import {
 
 interface TabelaSimplesProps<T> {
   colunas: string[]
-  dados: T[]
+  dados?: T[]
   /** Retorne um fragmento com `<TableCell>` para cada coluna, na mesma ordem de `colunas`. */
   renderLinha: (item: T, indice: number) => ReactNode
   /** Opcional: título acima da tabela */
@@ -19,7 +19,7 @@ interface TabelaSimplesProps<T> {
 
 export default function TabelaSimples<T>({
   colunas,
-  dados,
+  dados = [],
   renderLinha,
   titulo,
 }: TabelaSimplesProps<T>) {
@@ -30,14 +30,16 @@ export default function TabelaSimples<T>({
           <h3 className="text-lg font-semibold">{titulo}</h3>
         </div>
       ) : null}
-      <Table>
+       <Table>
         <TableHeader className="bg-muted/50">
           <TableRow>
             {colunas.map((col, idx) => (
               <TableHead
                 key={idx}
                 className={
-                  idx === colunas.length - 1 ? "text-right" : undefined
+                  idx === colunas.length - 1
+                    ? "text-right"
+                    : undefined
                 }
               >
                 {col}
@@ -45,6 +47,7 @@ export default function TabelaSimples<T>({
             ))}
           </TableRow>
         </TableHeader>
+
         <TableBody>
           {dados.length === 0 ? (
             <TableRow>
@@ -57,7 +60,9 @@ export default function TabelaSimples<T>({
             </TableRow>
           ) : (
             dados.map((item, indice) => (
-              <TableRow key={indice}>{renderLinha(item, indice)}</TableRow>
+              <TableRow key={indice}>
+                {renderLinha(item, indice)}
+              </TableRow>
             ))
           )}
         </TableBody>

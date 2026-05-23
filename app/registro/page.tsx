@@ -1,9 +1,10 @@
 "use client"
 import Link from "next/link"
 import { useState } from "react"
+import { useRouter } from "next/navigation";
 
 //servicos
-import { RegisterRequest } from "@/services/autenticacao"
+import { RegisterRequest, loginRequest } from "@/services/autenticacao"
 
 // componentes
 import { Button } from "@/components/ui/button"
@@ -21,24 +22,24 @@ import { Label } from "@/components/ui/label"
 
 
 export default function Registro() {
+  const router = useRouter();
      // constantes testes de login
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
   // Funcao teste de login
   async function handleRegister(e: React.FormEvent) {
-    e.preventDefault()
+    e.preventDefault();
   
-    console.log("ANTES DO FETCH:", email, password)
+    await RegisterRequest(email, password);
   
-    try {
-      const data = await RegisterRequest(email, password)
-  
-      console.log("Registrado")
-      console.log(data)
-    } catch (error) {
-      console.log("erro ao registrar", error)
-    }
+    const response = await loginRequest(email, password);
+    const { accessToken, refreshToken } = await response.json();
+    
+    localStorage.clear(); 
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+    router.push('/orcamento/');
   }
 
   return (

@@ -36,19 +36,6 @@ import {
       }
   }
 
-interface TokenPayload {
-  email: string
-  nameid: string // o id do usuário
-}
-
- function getUsuarioLogado() {
-  const token = localStorage.getItem("accessToken")
-  if (!token) return null
-
-  const decoded = jwtDecode<TokenPayload>(token)
-  return decoded
-}
-const usuario = getUsuarioLogado()
     const itens = [
       {
         href: "/orcamento/",
@@ -130,9 +117,6 @@ const usuario = getUsuarioLogado()
               <div className="min-w-0 flex-1 text-left">
                 <p className="truncate text-sm font-semibold leading-tight text-sidebar-foreground">
                    Bem vindo!
-                </p>
-                <p className="truncate text-xs text-sidebar-foreground/55">
-                  {usuario?.email}
                 </p>
               </div>
             </div>

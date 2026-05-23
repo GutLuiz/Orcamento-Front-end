@@ -39,6 +39,9 @@ import {
 
 import { Calendar } from "@/components/ui/calendar"
 
+//type
+import { CategoriaItem } from "@/types/categoriaType"
+
 interface Transacao {
   id: number
   title: string
@@ -66,7 +69,7 @@ export function ModalTransacao({
   onSuccess
 }: ModalTransacaoProps) {
 
-  const [categorias, setCategorias] = useState<any[]>([])
+  const [categorias, setCategorias] = useState<CategoriaItem[]>([])
 
   const [categoriaSelecionada, setCategoriaSelecionada] =
     useState("")
@@ -86,7 +89,7 @@ export function ModalTransacao({
 
       const data = await CategoriaGet()
 
-      setCategorias(data)
+      setCategorias(Array.isArray(data) ? data : [])
 
     } catch (error) {
 

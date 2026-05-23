@@ -34,6 +34,8 @@ export default function Login() {
     try {
         const data = await loginRequest(email, password)
 
+
+        localStorage.clear(); 
         localStorage.setItem("accessToken", data.accessToken)
         localStorage.setItem("refreshToken", data.refreshToken)
 
