@@ -16,5 +16,5 @@ export async function apiFetch(endpoint: string, options: RequestInit = {}) {
         throw new Error(`Erro na requisição: ${response.status}`)
     }
 
-    return response.json() // <-- retorna o response, quem chama decide se é .json() ou .text()
+    return response // <-- retorna o response, quem chama decide se é .json() ou .text()
 }

@@ -5,7 +5,9 @@ export async function DashboardCardGet(mes?: number, ano?: number) {
     if (mes !== undefined) params.append("mes", String(mes + 1))
     if (ano !== undefined) params.append("ano", String(ano))
 
-    return apiFetch(`/api/dashboard/cards?${params}`)
+    const response = await apiFetch(`/api/dashboard/cards?${params}`)
+    if (!response.ok) throw new Error(`Erro ao buscar cards: ${response.status}`)
+    return response.json()
 }
 
 export async function DashboardGraficoGet(mes?: number, ano?: number) {
@@ -13,7 +15,9 @@ export async function DashboardGraficoGet(mes?: number, ano?: number) {
     if (mes !== undefined) params.append("mes", String(mes + 1))
     if (ano !== undefined) params.append("ano", String(ano))
 
-    return apiFetch(`/api/dashboard/graficos?${params}`)
+    const response = await apiFetch(`/api/dashboard/graficos?${params}`)
+    if (!response.ok) throw new Error(`Erro ao buscar gráficos: ${response.status}`)
+    return response.json()
 }
 
 export async function DashboardListaGet(mes?: number, ano?: number) {
@@ -21,5 +25,7 @@ export async function DashboardListaGet(mes?: number, ano?: number) {
     if (mes !== undefined) params.append("mes", String(mes + 1))
     if (ano !== undefined) params.append("ano", String(ano))
 
-    return apiFetch(`/api/dashboard/listas?${params}`)
+    const response = await apiFetch(`/api/dashboard/listas?${params}`)
+    if (!response.ok) throw new Error(`Erro ao buscar listas: ${response.status}`)
+    return response.json()
 }

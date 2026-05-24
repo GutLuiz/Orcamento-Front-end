@@ -2,6 +2,7 @@
 import Link from "next/link"
 import { useState } from "react"
 import { useRouter } from "next/navigation";
+import { toast } from "sonner"
 
 //servicos
 import { RegisterRequest, loginRequest } from "@/services/autenticacao"
@@ -26,22 +27,59 @@ export default function Registro() {
      // constantes testes de login
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
-  // Funcao teste de login
+  
   async function handleRegister(e: React.FormEvent) {
-    e.preventDefault();
-  
-    await RegisterRequest(email, password);
-  
-    const response = await loginRequest(email, password);
-    const { accessToken, refreshToken } = await response.json();
-    
-    localStorage.clear(); 
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
-    router.push('/orcamento/');
+    e.preventDefault()
+
+    if (!email.trim()) {
+      toast.error("Preencha o e-mail")
+      return
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      toast.error("E-mail inválido")
+      return
+    }
+
+    if (!password.trim()) {
+      toast.error("Preencha a senha")
+      return
+    }
+
+    if (password.length < 6) {
+      toast.error("A senha deve ter pelo menos 6 caracteres")
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      await RegisterRequest(email, password)
+
+      const { accessToken, refreshToken } = await loginRequest(email, password)
+
+      localStorage.clear()
+      localStorage.setItem("accessToken", accessToken)
+      localStorage.setItem("refreshToken", refreshToken)
+
+      toast.success("Conta criada com sucesso!")
+      router.push("/orcamento/")
+
+    } catch (error: any) {
+      if (error.message === "usuario_existente") {
+        toast.error("Este e-mail já está cadastrado")
+      } else {
+        toast.error("Erro ao criar conta, tente novamente")
+      }
+    } finally {
+      setIsLoading(false)
+    }
   }
 
+ 
   return (
     <main className="flex min-h-screen items-center justify-center p-4">
       <Card className="w-full max-w-sm">

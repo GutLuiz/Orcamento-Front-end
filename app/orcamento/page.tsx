@@ -168,12 +168,38 @@ export default function Home() {
         </div>
        
       </section>
-      <section className="grid gap-6 lg:grid-cols-1 lg:items-start">
+      <section className="grid gap-6 lg:grid-cols-2 lg:items-start">
       <div className="min-w-0 lg:col-span-1">
           <Tabelas
             titulo="Transações recentes"
             colunas={["Título", "Valor", "Categoria", "Data"]}
             dados={listaTransacoesRecentes}
+            renderLinha={(item) => (
+              <>
+                <TableCell className="font-medium">
+                  {item.title || "—"}
+                </TableCell>
+                <TableCell>
+                  {(item.amount ?? 0).toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </TableCell>
+                <TableCell>{item.categoryName || "—"}</TableCell>
+                <TableCell className="text-right text-muted-foreground">
+                  {item.date
+                    ? new Date(item.date).toLocaleDateString("pt-BR")
+                    : "—"}
+                </TableCell>
+              </>
+            )}
+          />
+        </div> 
+        <div className="min-w-0 lg:col-span-1">
+          <Tabelas
+            titulo="Maiores Transações"
+            colunas={["Título", "Valor", "Categoria", "Data"]}
+            dados={listaTransacoesMaiores}
             renderLinha={(item) => (
               <>
                 <TableCell className="font-medium">

@@ -2,6 +2,7 @@
 import Link from "next/link"
 import { useState } from "react"
 import { useRouter } from "next/navigation";
+import { toast } from "sonner"
 
 // servicos
 import { loginRequest } from "@/services/autenticacao";
@@ -27,10 +28,34 @@ export default function Login() {
   // constantes testes de login
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   // Funcao teste de login
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
+       // validacoes
+       if (!email.trim()) {
+        toast.error("Preencha o e-mail")
+        return
+      }
+  
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(email)) {
+        toast.error("E-mail inválido")
+        return
+      }
+  
+      if (!password.trim()) {
+        toast.error("Preencha a senha")
+        return
+      }
+  
+      if (password.length < 6) {
+        toast.error("A senha deve ter pelo menos 6 caracteres")
+        return
+      }
+  
+      setIsLoading(true)
     try {
         const data = await loginRequest(email, password)
 
@@ -39,9 +64,12 @@ export default function Login() {
         localStorage.setItem("accessToken", data.accessToken)
         localStorage.setItem("refreshToken", data.refreshToken)
 
+        toast.success("Login realizado com sucesso!")
         router.push("/orcamento/")
     } catch (error) {
-        console.log("erro ao logar")
+      toast.error("E-mail ou senha inválidos")
+    } finally {
+      setIsLoading(false)
     }
 }
   return (

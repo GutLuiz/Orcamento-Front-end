@@ -144,71 +144,38 @@ export function ModalTransacao({
 
   // submit
   async function handleSubmit(e: React.FormEvent) {
-
     e.preventDefault()
 
     if (!categoriaId) {
-      alert("Selecione uma categoria")
-      return
+        alert("Selecione uma categoria")
+        return
     }
 
     if (!date) {
-      alert("Selecione uma data")
-      return
+        alert("Selecione uma data")
+        return
     }
 
     setIsSaving(true)
 
     try {
+        if (modo === "create") {
+            await TransacaoPost(title, Number(amount), type, date.toISOString(), categoriaId)
+        }
 
-      // CREATE
-      if (modo === "create") {
+        if (modo === "edit" && transacao) {
+            await TransacaoPut(transacao.id, title, Number(amount), type, date.toISOString(), categoriaId)
+        }
 
-        await TransacaoPost(
-          title,
-          Number(amount),
-          type,
-          date.toISOString(),
-          categoriaId
-        )
-
-        console.log("Transação criada")
-        
-
-      }
-
-      // EDIT
-      if (modo === "edit" && transacao) {
-
-        await TransacaoPut(
-          transacao.id,
-          title,
-          Number(amount),
-          type,
-          date.toISOString(),
-          categoriaId
-        )
-
-        console.log("Transação atualizada")
-
-      }
-
-      setOpen(false)
-
-      try {
+        setOpen(false)
         await onSuccess?.()
-      } catch (error) {
-        console.log("Erro ao atualizar lista de transações")
-      }
+
     } catch (error) {
-
-      console.log("Erro ao salvar transação", error)
-
+        console.log("Erro ao salvar transação", error)
     } finally {
-      setIsSaving(false)
+        setIsSaving(false)
     }
-  }
-
+}
   return (
     <Dialog open={open} onOpenChange={setOpen}>
 
