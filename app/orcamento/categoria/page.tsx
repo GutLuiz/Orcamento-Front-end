@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
-
 import { Plus, Pencil, Trash2 } from "lucide-react"
+import { toast } from "sonner"
 
 // servicos 
 import {
@@ -30,19 +30,36 @@ export default function Categoria() {
   const [categoriaIdEdit, setCategoriaIdEdit] = useState<number | null>(null)
   const [categoriaPost, setCategoriaPost] = useState("")
   const [categorias, setCategorias] = useState<CategoriaItem[]>([])
-  
 
   async function PostCategoria(e: React.FormEvent) {
     e.preventDefault()
-    if (!categoriaPost.trim()) return
+
+    if (!categoriaPost.trim()) {
+      toast.error("Preencha o nome da categoria")
+      return
+    }
+
+    if (categoriaPost.trim().length < 2) {
+      toast.error("O nome deve ter pelo menos 2 caracteres")
+      return
+    }
+
+    const jaExiste = categorias.some(
+      (c) => c.name.toLowerCase() === categoriaPost.trim().toLowerCase()
+    )
+    if (jaExiste) {
+      toast.error("Já existe uma categoria com esse nome")
+      return
+    }
 
     try {
-      await CategoriaPost(categoriaPost)
+      await CategoriaPost(categoriaPost.trim())
       setCategoriaPost("")
       setOpen(false)
       await fetchCategorias()
+      toast.success("Categoria criada com sucesso!")
     } catch {
-      console.log("Erro ao criar categoria")
+      toast.error("Erro ao criar categoria")
     }
   }
 
@@ -51,7 +68,7 @@ export default function Categoria() {
       const data = await CategoriaGet()
       setCategorias(Array.isArray(data) ? data : [])
     } catch {
-      console.log("Erro ao buscar categorias")
+      toast.error("Erro ao buscar categorias")
     }
   }
 
@@ -59,28 +76,48 @@ export default function Categoria() {
     try {
       await CategoriaDelete(id)
       setCategorias((prev) => prev.filter((cat) => cat.id !== id))
+      toast.success("Categoria removida")
     } catch {
-      console.log("Erro ao deletar")
+      toast.error("Erro ao deletar categoria")
     }
   }
 
   async function handlePut(e: React.FormEvent) {
     e.preventDefault()
-    if (!categoriaIdEdit || !categoriaEdit.trim()) return
+
+    if (!categoriaIdEdit) return
+
+    if (!categoriaEdit.trim()) {
+      toast.error("Preencha o nome da categoria")
+      return
+    }
+
+    if (categoriaEdit.trim().length < 2) {
+      toast.error("O nome deve ter pelo menos 2 caracteres")
+      return
+    }
+
+    const jaExiste = categorias.some(
+      (c) => c.name.toLowerCase() === categoriaEdit.trim().toLowerCase() && c.id !== categoriaIdEdit
+    )
+    if (jaExiste) {
+      toast.error("Já existe uma categoria com esse nome")
+      return
+    }
 
     try {
-      await CategoriaPut(categoriaIdEdit, categoriaEdit)
+      await CategoriaPut(categoriaIdEdit, categoriaEdit.trim())
       setCategorias((prev) =>
         prev.map((cat) =>
-          cat.id === categoriaIdEdit ? { ...cat, name: categoriaEdit } : cat
+          cat.id === categoriaIdEdit ? { ...cat, name: categoriaEdit.trim() } : cat
         )
       )
-
       setOpenEdit(false)
       setCategoriaEdit("")
       setCategoriaIdEdit(null)
+      toast.success("Categoria atualizada!")
     } catch {
-      console.log("Erro ao atualizar")
+      toast.error("Erro ao atualizar categoria")
     }
   }
 
@@ -123,7 +160,6 @@ export default function Categoria() {
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted text-sm font-semibold">
                       {c.name.slice(0, 2).toUpperCase()}
                     </div>
-
                     <div>
                       <CardTitle className="text-base">{c.name}</CardTitle>
                     </div>
@@ -156,7 +192,7 @@ export default function Categoria() {
                 <CardContent className="flex items-center justify-between border-t pt-3">
                   <span className="text-xs text-muted-foreground">Movimentado</span>
                   <span className="text-sm font-semibold text-foreground">
-                     R${c.movimentacaoMensal} 
+                    R${c.movimentacaoMensal}
                   </span>
                 </CardContent>
               </Card>

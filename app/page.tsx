@@ -1,129 +1,146 @@
 "use client"
 import Link from "next/link"
 import { useState } from "react"
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
-// servicos
-import { loginRequest } from "@/services/autenticacao";
+import { loginRequest } from "@/services/autenticacao"
 
-// componentes
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+import { Mail, Lock, ArrowRight, Wallet } from "lucide-react"
 
 export default function Login() {
-
-  // constantes react
-  const router = useRouter();
-  // constantes testes de login
+  const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
-  // Funcao teste de login
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
-       // validacoes
-       if (!email.trim()) {
-        toast.error("Preencha o e-mail")
-        return
-      }
-  
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(email)) {
-        toast.error("E-mail inválido")
-        return
-      }
-  
-      if (!password.trim()) {
-        toast.error("Preencha a senha")
-        return
-      }
-  
-      if (password.length < 6) {
-        toast.error("A senha deve ter pelo menos 6 caracteres")
-        return
-      }
-  
-      setIsLoading(true)
+
+    if (!email.trim()) {
+      toast.error("Preencha o e-mail")
+      return
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      toast.error("E-mail inválido")
+      return
+    }
+
+    if (!password.trim()) {
+      toast.error("Preencha a senha")
+      return
+    }
+
+    if (password.length < 6) {
+      toast.error("A senha deve ter pelo menos 6 caracteres")
+      return
+    }
+
+    setIsLoading(true)
+
     try {
-        const data = await loginRequest(email, password)
+      const data = await loginRequest(email, password)
 
+      localStorage.clear()
+      localStorage.setItem("accessToken", data.accessToken)
+      localStorage.setItem("refreshToken", data.refreshToken)
 
-        localStorage.clear(); 
-        localStorage.setItem("accessToken", data.accessToken)
-        localStorage.setItem("refreshToken", data.refreshToken)
-
-        toast.success("Login realizado com sucesso!")
-        router.push("/orcamento/")
-    } catch (error) {
+      toast.success("Login realizado com sucesso!")
+      router.push("/orcamento/")
+    } catch {
       toast.error("E-mail ou senha inválidos")
     } finally {
       setIsLoading(false)
     }
-}
+  }
+
   return (
-    <main className="flex min-h-screen items-center justify-center bg-muted/30 p-6 sm:p-8 md:p-10">
-      <Card className="w-full max-w-md border-border/80 shadow-md">
-        <CardHeader>
-          <CardTitle>Faça Login na sua Conta!</CardTitle>
-          <CardDescription>
-           Entre com Email e senha
-          </CardDescription>
-          <CardAction>
-            <Link href="/registro">
-              <Button variant="link">Registra-se</Button>
-            </Link>
-          </CardAction>
-        </CardHeader>
-        <CardContent>
-          <form id="login-form" onSubmit={handleLogin}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+    <main className="flex min-h-screen items-center justify-center bg-muted/30 p-6">
+      <div className="w-full max-w-md overflow-hidden rounded-2xl border border-border/80 bg-card shadow-sm">
+
+        {/* header */}
+        <div className="border-b border-border/80 px-8 pb-6 pt-8">
+          <div className="mb-5 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-muted">
+                <Wallet className="h-4 w-4 text-muted-foreground" />
               </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Senha</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Esqueceu a senha?
-                  </a>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
+              <span className="text-sm font-medium">Orçamento</span>
             </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button type="submit" form="login-form"  className="w-full">
-            Login
+            <Link
+              href="/registro"
+              className="flex items-center gap-1 text-xs text-muted-foreground transition hover:text-foreground"
+            >
+              Criar conta
+              <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+
+          <h1 className="text-xl font-medium">Bem-vindo de volta</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Entre com seu e-mail e senha para continuar.
+          </p>
+        </div>
+
+        {/* form */}
+        <form onSubmit={handleLogin} className="flex flex-col gap-4 px-8 py-6">
+
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="email" className="text-xs font-medium">
+              E-mail
+            </label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                id="email"
+                type="email"
+                placeholder="seu@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="pl-9"
+                disabled={isLoading}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+          <div className="flex items-center justify-between">
+              <label htmlFor="password" className="text-xs font-medium">
+                Senha
+              </label>
+              <a href="#" className="text-xs text-muted-foreground transition hover:text-foreground">
+                Esqueceu a senha?
+              </a>
+            </div>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="pl-9"
+                disabled={isLoading}
+              />
+            </div>
+          </div>
+
+          <Button type="submit" className="mt-1 w-full gap-2" disabled={isLoading}>
+            {isLoading ? "Entrando..." : (
+              <>
+                Entrar
+                <ArrowRight className="h-4 w-4" />
+              </>
+            )}
           </Button>
-        </CardFooter>
-      </Card>
+
+        </form>
+      </div>
     </main>
   )
 }

@@ -1,36 +1,21 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-import {
-  Plus,
-  MoreHorizontalIcon,
-  Pencil,
-  Trash2,
-} from "lucide-react";
+import { Plus, MoreHorizontalIcon, Pencil, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { TransacaoDelete, TransacaoGet } from "@/services/transacoes";
-
 import { TransacoesType } from "@/types/transacoesType";
 
 // componentes
 import { Titulos } from "@/components/titulos/titulo";
 import { ModalTransacao } from "@/components/dialogo/modal-transacao";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { FiltroMes } from "@/components/filtro/filtroMes";
@@ -39,29 +24,21 @@ const fmtBRL = (n: number) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export default function Transacoes() {
-
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [transacaoSelecionada, setTransacaoSelecionada] =
-    useState<TransacoesType | null>(null);
+  const [transacaoSelecionada, setTransacaoSelecionada] = useState<TransacoesType | null>(null);
   const [transacoes, setTransacoes] = useState<TransacoesType[]>([]);
 
   const hoje = new Date();
-
-  const [mesSelecionado, setMesSelecionado] = useState(
-    hoje.getMonth()
-  );
-
-  const [anoSelecionado, setAnoSelecionado] = useState(
-    hoje.getFullYear()
-  );
+  const [mesSelecionado, setMesSelecionado] = useState(hoje.getMonth());
+  const [anoSelecionado, setAnoSelecionado] = useState(hoje.getFullYear());
 
   async function GetTransacao() {
     try {
-      const data = await TransacaoGet(mesSelecionado,anoSelecionado);
+      const data = await TransacaoGet(mesSelecionado, anoSelecionado);
       setTransacoes(Array.isArray(data) ? data : []);
     } catch {
-      console.log("Erro ao buscar transacoes");
+      toast.error("Erro ao buscar transações");
     }
   }
 
@@ -69,8 +46,9 @@ export default function Transacoes() {
     try {
       await TransacaoDelete(id);
       setTransacoes((prev) => prev.filter((t) => t.id !== id));
+      toast.success("Transação removida");
     } catch {
-      console.log("Erro ao deletar");
+      toast.error("Erro ao deletar transação");
     }
   }
 
@@ -122,12 +100,8 @@ export default function Transacoes() {
             <TableBody>
               {transacoes.length === 0 ? (
                 <TableRow>
-                  <TableCell
-                    colSpan={6}
-                    className="h-24 text-center text-muted-foreground"
-                  >
-                    Nenhuma transação ainda. Clique em &quot;Nova transação&quot;
-                    para começar.
+                  <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                    Nenhuma transação ainda. Clique em &quot;Nova transação&quot; para começar.
                   </TableCell>
                 </TableRow>
               ) : (
@@ -136,38 +110,28 @@ export default function Transacoes() {
                     <TableCell className="font-medium">{t.title}</TableCell>
                     <TableCell>{t.categoryName || "—"}</TableCell>
                     <TableCell className="text-muted-foreground">
-                      {t.date
-                        ? new Date(t.date).toLocaleDateString("pt-BR")
-                        : "—"}
+                      {t.date ? new Date(t.date).toLocaleDateString("pt-BR") : "—"}
                     </TableCell>
                     <TableCell>
-                      <span
-                        className={
-                          t.type === 1
-                            ? "inline-flex rounded-full bg-emerald-500/15 px-2 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-400"
-                            : "inline-flex rounded-full bg-red-500/15 px-2 py-1 text-xs font-medium text-red-700 dark:text-red-400"
-                        }
-                      >
+                      <span className={
+                        t.type === 1
+                          ? "inline-flex rounded-full bg-emerald-500/15 px-2 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-400"
+                          : "inline-flex rounded-full bg-red-500/15 px-2 py-1 text-xs font-medium text-red-700 dark:text-red-400"
+                      }>
                         {t.type === 1 ? "Receita" : "Despesa"}
                       </span>
                     </TableCell>
-                    <TableCell
-                      className={`text-right font-semibold tabular-nums ${
-                        t.type === 1
-                          ? "text-emerald-600 dark:text-emerald-400"
-                          : "text-red-600 dark:text-red-400"
-                      }`}
-                    >
+                    <TableCell className={`text-right font-semibold tabular-nums ${
+                      t.type === 1
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : "text-red-600 dark:text-red-400"
+                    }`}>
                       {fmtBRL(Number(t.amount) || 0)}
                     </TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="size-8"
-                          >
+                          <Button variant="ghost" size="icon" className="size-8">
                             <MoreHorizontalIcon />
                           </Button>
                         </DropdownMenuTrigger>
