@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata = {
   title: "Organiza Aí",
-  description: "Sistema de orçamento pessoal",
+  description: "Sistema de orçamento pessoal.",
 }
 
 export default function RootLayout({
