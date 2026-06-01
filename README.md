@@ -7,6 +7,7 @@ Aplicação web de controle financeiro pessoal desenvolvida com Next.js e TypeSc
 - Next.js
 - TypeScript
 - Tailwind CSS
+- Shadcn
 
 ## Funcionalidades
 
