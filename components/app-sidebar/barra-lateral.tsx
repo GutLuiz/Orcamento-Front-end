@@ -32,13 +32,13 @@ import {
           // mesmo se a requisição falhar, limpa o storage e redireciona
           localStorage.removeItem("accessToken")
           localStorage.removeItem("refreshToken")
-          router.replace("/")
+          router.replace("/(auth)/login")
       }
   }
 
     const itens = [
       {
-        href: "/orcamento/",
+        href: "/orcamento/homepage",
         label: "Dashboard",
         icon: LayoutDashboard,
       },
