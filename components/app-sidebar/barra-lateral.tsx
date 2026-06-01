@@ -32,7 +32,7 @@ import {
           // mesmo se a requisição falhar, limpa o storage e redireciona
           localStorage.removeItem("accessToken")
           localStorage.removeItem("refreshToken")
-          router.replace("/(auth)/login")
+          router.replace("/login")
       }
   }
 
