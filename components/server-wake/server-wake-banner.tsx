@@ -19,7 +19,7 @@ export function ServerWakeBanner() {
           </p>
           <ol className="mt-1.5 list-decimal pl-4 space-y-0.5 text-amber-800">
             <li>Tente fazer <strong>login ou registro</strong> normalmente</li>
-            <li>Se der erro, aguarde <strong>30 segundos</strong> e <strong>atualize a página</strong></li>
+            <li>Se der erro, aguarde <strong> 30 segundos</strong></li>
             <li>O servidor já estará acordado e pronto ✅</li>
           </ol>
         </div>
