@@ -50,7 +50,7 @@ export default function Login() {
       localStorage.setItem("refreshToken", data.refreshToken)
 
       toast.success("Login realizado com sucesso!")
-      router.push("/orcamento/")
+      router.push("/orcamento/homepage")
     } catch {
       toast.error("E-mail ou senha inválidos")
     } finally {

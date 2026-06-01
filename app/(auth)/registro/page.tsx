@@ -52,7 +52,7 @@ export default function Registro() {
       localStorage.setItem("refreshToken", refreshToken)
 
       toast.success("Conta criada com sucesso!")
-      router.push("/orcamento/")
+      router.push("/orcamento/homepage")
 
     } catch (error: any) {
       if (error.message === "usuario_existente") {
